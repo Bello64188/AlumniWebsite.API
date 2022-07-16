@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 
 namespace AlumniWebsite.API
 {
@@ -13,7 +15,29 @@ namespace AlumniWebsite.API
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File(path: "C:\\Users\\MMSS\\source\\repos\\SchAlumniWebsite\\AlumniWebsite.API\\Logs\\log-.txt",
+                                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}[{Level:u3}]{Message:lj}{NewLine}{Exception}",
+                                rollingInterval: RollingInterval.Day,
+                                restrictedToMinimumLevel: LogEventLevel.Information
+
+                                ).CreateLogger();
+            try
+            {
+                Log.Information("Application Have Started!!");
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch(Exception ex)
+            {
+                Log.Fatal(ex,"Application Failed to start");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+
+                
+           
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

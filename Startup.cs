@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AlumniWebsite.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +29,7 @@ namespace AlumniWebsite.API
         {
 
             services.AddControllers();
+            services.CorsConfiguration();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AlumniWebsite.API", Version = "v1" });
@@ -45,6 +47,7 @@ namespace AlumniWebsite.API
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("policy");
 
             app.UseRouting();
 
