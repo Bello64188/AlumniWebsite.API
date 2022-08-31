@@ -63,7 +63,7 @@ namespace AlumniWebsite.API.ImplementInterface
         };
 
             var role = await _userManager.GetRolesAsync(_member);
-            claim.AddRange(role.Select(roles => new Claim(ClaimTypes.Role, roles)));
+            claim.AddRange(role.Select(roles => new Claim("role", roles)));
             return claim;
         }
 

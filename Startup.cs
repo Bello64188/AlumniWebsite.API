@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AlumniWebsite.API.Configurations.CloudConfiguration;
+using AlumniWebsite.API.Configurations.Filter;
 using AlumniWebsite.API.Data;
 using AlumniWebsite.API.ImplementInterface;
 using AlumniWebsite.API.Interface;
@@ -35,7 +37,7 @@ namespace AlumniWebsite.API
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthManager, AuthManager>();
-            // services.IdentityConfiguration();
+            services.Configure<Cloud>(Configuration.GetSection("Cloud"));
             services.AddIdentity<Member, MemberRole>().AddEntityFrameworkStores<AppDbContext>();
             services.AddDbContext<Data.AppDbContext>(option => option.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -52,6 +54,7 @@ namespace AlumniWebsite.API
                 option.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
             });
+            services.AddTransient<LogMemberActivity>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

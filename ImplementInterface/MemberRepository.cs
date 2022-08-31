@@ -42,24 +42,31 @@ namespace AlumniWebsite.API.ImplementInterface
             /// </summary>
             members = members.Where(m => m.Id != memberParams.MemberId);
             members = members.Where(g => g.Gender == memberParams.Gender);
-            // filter with age
-            if (memberParams.MinAge != 18 || memberParams.MaxAge != 99)
-            {
-                DateTime maxDob = DateTime.Today.AddYears(-memberParams.MinAge);
-                DateTime minDob = DateTime.Today.AddYears(-memberParams.MaxAge - 1);
-                members = members.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
-            }
 
+
+            // filter with age
+            //if (memberParams.MinAge != 18 || memberParams.MaxAge != 99)
+            //{
+            //    DateTime maxDob = DateTime.Today.AddYears(-memberParams.MinAge);
+            //    DateTime minDob = DateTime.Today.AddYears(-memberParams.MaxAge - 1);
+            //    members = members.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
+            //}
+            // if graduationYear is not equal to null
+            if (memberParams.GraduationYear != null)
+            {
+                members = members.Where(y => y.GraduationYear == memberParams.GraduationYear);
+            }
             // sorting by created and lastActive
+
             if (!string.IsNullOrEmpty(memberParams.OrderBy))
             {
                 switch (memberParams.OrderBy.ToLower())
                 {
                     case "created":
-                        members.OrderByDescending(c => c.Created);
+                        members = members.OrderByDescending(c => c.Created);
                         break;
                     default:
-                        members.OrderByDescending(m => m.LastActive);
+                        members = members.OrderByDescending(m => m.LastActive);
                         break;
                 }
             }
@@ -72,6 +79,11 @@ namespace AlumniWebsite.API.ImplementInterface
             var member = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(e => e.Email == email);
             if (member == null) return null;
             return member;
+        }
+
+        public void Update(Member member)
+        {
+            _context.Update(member);
         }
     }
 }

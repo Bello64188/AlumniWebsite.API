@@ -24,6 +24,8 @@ namespace AlumniWebsite.API.ImplementInterface
 
         public IMemberRepository MemberRepository => new MemberRepository(_context, _mapper);
 
+        public IPhotoRepository PhotoRepository => new PhotoRepository(_context);
+
         public async Task<bool> Complete()
         {
             return await _context.SaveChangesAsync() > 0;

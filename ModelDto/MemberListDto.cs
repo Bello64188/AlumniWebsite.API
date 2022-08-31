@@ -15,7 +15,7 @@ namespace AlumniWebsite.API.ModelDto
         public string KnownAs { get; set; }
         public DateTime Created { get; set; }
         public DateTime LastActive { get; set; }
-        public DateTime GraduationYear { get; set; }
+        public int GraduationYear { get; set; }
         public string Introduction { get; set; }
         public string LookingFor { get; set; }
         public string PhoneNumber { get; set; }

@@ -9,7 +9,7 @@ namespace AlumniWebsite.API.Configurations.Filter
     {
         //page parameter
         public int PageNumber { get; set; } = 1;
-        private int pageSize = 10;
+        private int pageSize = 5;
         private const int MaxPageSize = 50;
         public int PageSize
         {
@@ -18,12 +18,12 @@ namespace AlumniWebsite.API.Configurations.Filter
         }
         //filter
         public string MemberId { get; set; }
-        public int MinAge { get; set; } = 18;
-        public int MaxAge { get; set; } = 99;
+        //public int MinAge { get; set; } = 18;
+        //public int MaxAge { get; set; } = 99;
         public string Gender { get; set; }
-        public DateTime GraduationYear { get; set; }
+        public int? GraduationYear { get; set; }
         //sorting
-        public string OrderBy { get; set; }
+        public string OrderBy { get; set; } = "lastactive";
         public bool Likers { get; set; } = false;
         public bool Likees { get; set; } = false;
 

@@ -53,8 +53,9 @@ namespace AlumniWebsite.API.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("GraduationYear")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("GraduationYear")
+                        .HasMaxLength(4)
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Interests")
                         .HasMaxLength(500)

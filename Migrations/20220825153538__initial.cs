@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AlumniWebsite.API.Migrations
 {
-    public partial class _FirstSatge : Migration
+    public partial class _initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,7 +31,7 @@ namespace AlumniWebsite.API.Migrations
                     KnownAs = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     LastActive = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    GraduationYear = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    GraduationYear = table.Column<int>(type: "INTEGER", maxLength: 4, nullable: false),
                     Introduction = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
                     LookingFor = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
                     Interests = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),

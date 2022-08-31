@@ -34,6 +34,10 @@ namespace AlumniWebsite.API.Configurations.MapperConfiguration
                 {
                     option.MapFrom(d => d.DateOfBirth.CalculateAge());
                 });
+            CreateMap<Photo, PhotoDto>();
+            CreateMap<PhotoForCreationDto, Photo>();
+            CreateMap<Photo, PhotoForReturnDto>();
+            CreateMap<UpdateDto, Member>();
 
 
         }

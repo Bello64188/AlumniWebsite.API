@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlumniWebsite.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220815171845__FirstSatge")]
-    partial class _FirstSatge
+    [Migration("20220825153538__initial")]
+    partial class _initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,8 +55,9 @@ namespace AlumniWebsite.API.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("GraduationYear")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("GraduationYear")
+                        .HasMaxLength(4)
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Interests")
                         .HasMaxLength(500)

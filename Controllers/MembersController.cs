@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace AlumniWebsite.API.Controllers
 {
+    [ServiceFilter(typeof(LogMemberActivity))]
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -42,7 +43,7 @@ namespace AlumniWebsite.API.Controllers
             memberParams.MemberId = currentId;
             if (string.IsNullOrEmpty(memberParams.Gender))
             {
-                memberParams.Gender = memberFromUnit.Gender.ToLower() == "male" ? "female" : "male";
+                memberParams.Gender = memberFromUnit.Gender.ToLower() == "female" ? "male" : "female";
             }
             var member = await _unitOfWork.MemberRepository.GetMembers(memberParams);
             var memberMap = _mapper.Map<IList<MemberListDto>>(member);
@@ -56,6 +57,22 @@ namespace AlumniWebsite.API.Controllers
             var member = await _unitOfWork.MemberRepository.GetMember(id);
             var memberMap = _mapper.Map<MemberDetailsDto>(member);
             return Ok(memberMap);
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> UpDateMember([FromBody] UpdateDto updateDto, string id)
+        {
+            if (!ModelState.IsValid || string.IsNullOrEmpty(id))
+                return BadRequest(ModelState);
+            var member = await _unitOfWork.MemberRepository.GetMember(id);
+            if (member == null)
+                return BadRequest($"Member of Id {id} is not found");
+            _mapper.Map(updateDto, member);
+            _unitOfWork.MemberRepository.Update(member);
+            await _unitOfWork.Complete();
+            return NoContent();
         }
     }
 }

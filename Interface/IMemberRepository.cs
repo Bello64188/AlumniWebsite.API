@@ -12,6 +12,7 @@ namespace AlumniWebsite.API.Interface
     {
         Task<PagedList<Member>> GetMembers(MemberParams memberParams);
         Task<Member> GetMember(string id);
+        void Update(Member member);
         Task<Member> Login(string email, string password);
 
     }

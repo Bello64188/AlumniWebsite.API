@@ -31,7 +31,7 @@ namespace AlumniWebsite.API.Services
                     policy.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .WithExposedHeaders("X-InlineCount");
+                    .WithExposedHeaders("X-InlineCount", "X-Pagination");
 
                 }
                 ));
@@ -43,7 +43,7 @@ namespace AlumniWebsite.API.Services
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
-                    .WithExposedHeaders("X-InlineCount");
+                    .WithExposedHeaders("X-InlineCount", "X-Pagination");
                 }
 
                 ));
@@ -78,8 +78,8 @@ namespace AlumniWebsite.API.Services
             var paginationHeaders = new PaginationHeader(currentPage, itemPerPage, totalItem, totalPage);
             var camlCaseFormatter = new JsonSerializerSettings();
             camlCaseFormatter.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            response.Headers.Add("Pagination", JsonConvert.SerializeObject(paginationHeaders, camlCaseFormatter));
-            response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
+            response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationHeaders, camlCaseFormatter));
+            response.Headers.Add("access-control-expose-headers", "X-Pagination");
         }
         public static int CalculateAge(this DateTime theAge)
         {

@@ -39,7 +39,7 @@ namespace AlumniWebsite.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
-            _logger.LogInformation($"attempt to register{registerDto.Email}");
+            _logger.LogInformation($"attempt to register  {registerDto.Email}");
             if (!ModelState.IsValid)
             {
                 return ValidationProblem(ModelState);
