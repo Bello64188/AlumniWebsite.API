@@ -1,5 +1,6 @@
 ﻿using AlumniWebsite.API.Configurations.Filter;
 using AlumniWebsite.API.Interface;
+using AlumniWebsite.API.Model;
 using AlumniWebsite.API.ModelDto;
 using AlumniWebsite.API.Services;
 using AutoMapper;
@@ -73,6 +74,28 @@ namespace AlumniWebsite.API.Controllers
             _unitOfWork.MemberRepository.Update(member);
             await _unitOfWork.Complete();
             return NoContent();
+        }
+        [HttpPost("{id}/like/{recipientId}")]
+        public async Task<IActionResult> MemberLikes(string id, string recipientId)
+        {
+            var currentId = User.Claims.FirstOrDefault(getType => getType.Type.Equals("id", StringComparison.OrdinalIgnoreCase))?.Value;
+            if (id == null)
+                return Unauthorized();
+            var like = await _unitOfWork.LikeRepository.GetLike(id, recipientId);
+            if (like != null)
+                return BadRequest("You have already like before");
+            if (recipientId == null)
+                return NotFound("Cloud not find user to like");
+            like = new Like
+            {
+                LikerId = id,
+                LikeeId = recipientId
+            };
+            _unitOfWork.LikeRepository.Add(like);
+            if (await _unitOfWork.Complete())
+                return Ok();
+            return BadRequest("Could not Like each other.");
+
         }
     }
 }

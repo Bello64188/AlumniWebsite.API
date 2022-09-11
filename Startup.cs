@@ -69,7 +69,6 @@ namespace AlumniWebsite.API
 
             app.UseHttpsRedirection();
             app.UseCors("policy");
-
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

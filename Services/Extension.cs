@@ -25,28 +25,27 @@ namespace AlumniWebsite.API.Services
         //cors configurations
         public static void CorsConfiguration(this IServiceCollection services)
         {
+            //services.AddCors(op => op.AddPolicy(
+            //    "policy", policy =>
+            //    {
+            //        policy.AllowAnyOrigin()
+            //        .AllowAnyMethod()
+            //        .AllowAnyHeader()
+            //        .WithExposedHeaders("X-InlineCount", "X-Pagination");
+
+            //    }
+            //    ));
             services.AddCors(op => op.AddPolicy(
-                "policy", policy =>
-                {
-                    policy.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .WithExposedHeaders("X-InlineCount", "X-Pagination");
+           "policy", policy =>
+           {
+               policy.WithOrigins("http://localhost:4200")
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials()
+               .WithExposedHeaders("X-InlineCount", "X-Pagination", "XMLHttpRequest");
+           }
 
-                }
-                ));
-            services.AddCors(op => op.AddPolicy(
-                " specificPolicy ", policy =>
-                {
-
-                    policy.WithOrigins("http://localhsot:4200")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials()
-                    .WithExposedHeaders("X-InlineCount", "X-Pagination");
-                }
-
-                ));
+           ));
         }
         //error messages configuration
         public static void ConfigurationException(this IApplicationBuilder builder)

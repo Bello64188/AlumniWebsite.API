@@ -1,4 +1,5 @@
-﻿using AlumniWebsite.API.Model;
+﻿using AlumniWebsite.API.Configurations.Entity;
+using AlumniWebsite.API.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +18,11 @@ namespace AlumniWebsite.API.Data
         {
         }
         public DbSet<Photo> Photos { get; set; }
+        public DbSet<Like> Likes { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.ApplyConfiguration(new LikeConfiguration());
         }
     }
 }

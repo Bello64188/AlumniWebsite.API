@@ -15,5 +15,6 @@ namespace AlumniWebsite.API.Interface
         void Update(Member member);
         Task<Member> Login(string email, string password);
 
+
     }
 }

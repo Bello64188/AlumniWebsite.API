@@ -42,15 +42,19 @@ namespace AlumniWebsite.API.ImplementInterface
             /// </summary>
             members = members.Where(m => m.Id != memberParams.MemberId);
             members = members.Where(g => g.Gender == memberParams.Gender);
+            // member i liked
+            if (memberParams.Likers)
+            {
+                var memberLikers = await GetMemberLike(memberParams.MemberId, memberParams.Likers);
+                members = members.Where(m => memberLikers.Contains(m.Id));
+            }
+            if (memberParams.Likees)
+            {
+                var memberLikees = await GetMemberLike(memberParams.MemberId, memberParams.Likers);
+                members = members.Where(m => memberLikees.Contains(m.Id));
+            }
 
 
-            // filter with age
-            //if (memberParams.MinAge != 18 || memberParams.MaxAge != 99)
-            //{
-            //    DateTime maxDob = DateTime.Today.AddYears(-memberParams.MinAge);
-            //    DateTime minDob = DateTime.Today.AddYears(-memberParams.MaxAge - 1);
-            //    members = members.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
-            //}
             // if graduationYear is not equal to null
             if (memberParams.GraduationYear != null)
             {
@@ -72,6 +76,18 @@ namespace AlumniWebsite.API.ImplementInterface
             }
             // return member
             return await PagedList<Member>.CreatAsync(members, memberParams.PageNumber, memberParams.PageSize);
+        }
+
+        private async Task<IEnumerable<string>> GetMemberLike(string memberId, bool likers)
+        {
+            var member = await _context.Users
+                 .Include(l => l.Likers)
+                 .Include(l => l.Likees)
+                 .FirstOrDefaultAsync(i => i.Id == memberId);
+            if (likers)
+                return member.Likers.Where(i => i.LikerId == memberId).Select(i => i.LikeeId);
+            else
+                return member.Likees.Where(i => i.LikeeId == memberId).Select(i => i.LikerId);
         }
 
         public async Task<Member> Login(string email, string password)
