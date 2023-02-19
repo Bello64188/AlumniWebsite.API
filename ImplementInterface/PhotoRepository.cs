@@ -1,6 +1,7 @@
 ﻿using AlumniWebsite.API.Data;
 using AlumniWebsite.API.Interface;
 using AlumniWebsite.API.Model;
+using AlumniWebsite.API.ModelDto;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,19 @@ namespace AlumniWebsite.API.ImplementInterface
         {
             var photo = await _context.Photos.FirstOrDefaultAsync(u => u.Id == id);
             return photo;
+        }
+
+        public async Task<IEnumerable<ApprovePhotoDto>> GetUnApprovePhoto()
+        {
+            var unApprovedPhoto = await _context.Photos.IgnoreQueryFilters().Where(p => p.PublicId != null).Select(p => new ApprovePhotoDto
+            {
+                Id = p.Id,
+                IsApproved = p.IsApproved,
+                Url = p.Url,
+                UserName = p.Member.UserName
+
+            }).ToListAsync();
+            return (unApprovedPhoto);
         }
 
         public void RemovePhoto(Photo photo)

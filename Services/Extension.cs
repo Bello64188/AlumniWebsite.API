@@ -25,16 +25,7 @@ namespace AlumniWebsite.API.Services
         //cors configurations
         public static void CorsConfiguration(this IServiceCollection services)
         {
-            //services.AddCors(op => op.AddPolicy(
-            //    "policy", policy =>
-            //    {
-            //        policy.AllowAnyOrigin()
-            //        .AllowAnyMethod()
-            //        .AllowAnyHeader()
-            //        .WithExposedHeaders("X-InlineCount", "X-Pagination");
 
-            //    }
-            //    ));
             services.AddCors(op => op.AddPolicy(
            "policy", policy =>
            {
@@ -117,10 +108,44 @@ namespace AlumniWebsite.API.Services
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtSetting?.GetSection("Issuer").Value,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
-
-
                 };
             });
+            //services.AddIdentity<Member, MemberRole>(option =>
+            //{
+            //    option.Password.RequireNonAlphanumeric = false;
+            //})
+
+            //    .AddRoleManager<RoleManager<MemberRole>>()
+            //    .AddSignInManager<SignInManager<Member>>()
+            //    .AddRoleValidator<RoleValidator<MemberRole>>()
+            //    .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+            //services.AddAuthorization(option =>
+            //{
+            //    option.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+            //    option.AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
+            //});
+            //return services;
+
+        }
+
+        public static IServiceCollection AddIdetityRolePolicy(this IServiceCollection services)
+        {
+            var key = Environment.GetEnvironmentVariable("KEYAPI");
+            services.AddIdentity<Member, MemberRole>(option =>
+             {
+                 option.Password.RequireNonAlphanumeric = false;
+             })
+
+                .AddRoleManager<RoleManager<MemberRole>>()
+                .AddSignInManager<SignInManager<Member>>()
+                .AddRoleValidator<RoleValidator<MemberRole>>()
+                .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+            services.AddAuthorization(option =>
+            {
+                option.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+                option.AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
+            });
+            return services;
         }
     }
 }

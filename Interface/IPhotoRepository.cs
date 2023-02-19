@@ -1,4 +1,5 @@
 ﻿using AlumniWebsite.API.Model;
+using AlumniWebsite.API.ModelDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,7 @@ namespace AlumniWebsite.API.Interface
         Task<Photo> GetPhotoById(int id);
         Task<Photo> GetMainPhotoForMember(string memberId);
         void RemovePhoto(Photo photo);
+
+        Task<IEnumerable<ApprovePhotoDto>> GetUnApprovePhoto();
     }
 }

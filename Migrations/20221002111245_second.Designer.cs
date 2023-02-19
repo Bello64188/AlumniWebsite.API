@@ -9,14 +9,29 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlumniWebsite.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220825153538__initial")]
-    partial class _initial
+    [Migration("20221002111245_second")]
+    partial class second
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.17");
+
+            modelBuilder.Entity("AlumniWebsite.API.Model.Like", b =>
+                {
+                    b.Property<string>("LikeeId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LikerId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("LikeeId", "LikerId");
+
+                    b.HasIndex("LikerId");
+
+                    b.ToTable("Likes");
+                });
 
             modelBuilder.Entity("AlumniWebsite.API.Model.Member", b =>
                 {
@@ -132,6 +147,9 @@ namespace AlumniWebsite.API.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("MemberId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -141,6 +159,8 @@ namespace AlumniWebsite.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MemberId");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
@@ -167,6 +187,45 @@ namespace AlumniWebsite.API.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+                });
+
+            modelBuilder.Entity("AlumniWebsite.API.Model.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DateRead")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("MessageSent")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("RecipientDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("RecipientId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("SenderDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SenderId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("AlumniWebsite.API.Model.Photo", b =>
@@ -293,6 +352,32 @@ namespace AlumniWebsite.API.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("AlumniWebsite.API.Model.Like", b =>
+                {
+                    b.HasOne("AlumniWebsite.API.Model.Member", "Liker")
+                        .WithMany("Likees")
+                        .HasForeignKey("LikeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("AlumniWebsite.API.Model.Member", "Likee")
+                        .WithMany("Likers")
+                        .HasForeignKey("LikerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Likee");
+
+                    b.Navigation("Liker");
+                });
+
+            modelBuilder.Entity("AlumniWebsite.API.Model.MemberRole", b =>
+                {
+                    b.HasOne("AlumniWebsite.API.Model.Member", null)
+                        .WithMany("MemberRoles")
+                        .HasForeignKey("MemberId");
+                });
+
             modelBuilder.Entity("AlumniWebsite.API.Model.MemberUserRole", b =>
                 {
                     b.HasOne("AlumniWebsite.API.Model.MemberRole", null)
@@ -310,6 +395,23 @@ namespace AlumniWebsite.API.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AlumniWebsite.API.Model.Message", b =>
+                {
+                    b.HasOne("AlumniWebsite.API.Model.Member", "Recipient")
+                        .WithMany("MessageReceived")
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("AlumniWebsite.API.Model.Member", "Sender")
+                        .WithMany("MessageSent")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Recipient");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("AlumniWebsite.API.Model.Photo", b =>
@@ -359,6 +461,16 @@ namespace AlumniWebsite.API.Migrations
 
             modelBuilder.Entity("AlumniWebsite.API.Model.Member", b =>
                 {
+                    b.Navigation("Likees");
+
+                    b.Navigation("Likers");
+
+                    b.Navigation("MemberRoles");
+
+                    b.Navigation("MessageReceived");
+
+                    b.Navigation("MessageSent");
+
                     b.Navigation("Photos");
                 });
 

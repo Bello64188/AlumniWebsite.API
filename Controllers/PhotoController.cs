@@ -23,21 +23,17 @@ namespace AlumniWebsite.API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOptions<Cloud> _cloudSetting;
+        private readonly IPhotoService photoService;
         private readonly IMapper _mapper;
         private Cloudinary _cloudinary;
 
         public PhotoController(IUnitOfWork unitOfWork, IMapper mapper,
-            IOptions<Cloud> cloudSetting)
+            IPhotoService photoService)
         {
             _unitOfWork = unitOfWork;
-            _cloudSetting = cloudSetting;
+            this.photoService = photoService;
             _mapper = mapper;
-            Account acc = new Account(
-                _cloudSetting.Value.CloudName,
-                _cloudSetting.Value.ApiKey,
-                _cloudSetting.Value.ApiSecret
-                );
-            _cloudinary = new Cloudinary(acc);
+
         }
         [HttpGet("{id}", Name = "GetMemberPhoto")]
         public async Task<IActionResult> GetMemberPhoto(int id)
@@ -53,21 +49,7 @@ namespace AlumniWebsite.API.Controllers
             if (member == null)
                 return BadRequest("Member Not Found!!");
             var file = photoForCreation.File;
-            var uploadResult = new ImageUploadResult();
-            if (file.Length > 0)
-            {
-                using (var stream = file.OpenReadStream())
-                {
-                    var uploadParams = new ImageUploadParams()
-                    {
-                        File = new FileDescription(file.Name, stream),
-                        Folder = "ModebeAlumni/image",
-                        Transformation = new Transformation().Width(500)
-                        .Height(500).Crop("fill").Gravity("face")
-                    };
-                    uploadResult = _cloudinary.Upload(uploadParams);
-                }
-            }
+            var uploadResult = await photoService.AddPhoto(file);
             photoForCreation.Url = uploadResult.Url.ToString();
             photoForCreation.PublicId = uploadResult.PublicId;
             var photo = _mapper.Map<Photo>(photoForCreation);
@@ -109,8 +91,7 @@ namespace AlumniWebsite.API.Controllers
                 return BadRequest("You cannot delete the main Photo");
             if (photofromRepo.PublicId != null)
             {
-                var deleteParams = new DeletionParams(photofromRepo.PublicId);
-                var result = _cloudinary.Destroy(deleteParams);
+                var result = await photoService.DeletePhoto(photofromRepo.PublicId);
                 if (result.Result == "ok")
                     _unitOfWork.PhotoRepository.RemovePhoto(photofromRepo);
                 if (photofromRepo.PublicId == null)

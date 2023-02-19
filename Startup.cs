@@ -9,10 +9,12 @@ using AlumniWebsite.API.ImplementInterface;
 using AlumniWebsite.API.Interface;
 using AlumniWebsite.API.Model;
 using AlumniWebsite.API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,13 +39,15 @@ namespace AlumniWebsite.API
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthManager, AuthManager>();
+            services.AddScoped<IPhotoService, PhotoService>();
             services.Configure<Cloud>(Configuration.GetSection("Cloud"));
-            services.AddIdentity<Member, MemberRole>().AddEntityFrameworkStores<AppDbContext>();
-            services.AddDbContext<Data.AppDbContext>(option => option.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddIdetityRolePolicy();
+            // services.AddIdentity<Member, MemberRole>().AddEntityFrameworkStores<AppDbContext>();
+            services.AddDbContext<AppDbContext>(option => option.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddAuthentication();
-            services.AddAuthorization();
             services.jwtConfiguration(Configuration);
+            services.AddAuthorization();
+            services.AddAuthentication();
             services.CorsConfiguration();
             services.AddSwaggerGen(c =>
             {

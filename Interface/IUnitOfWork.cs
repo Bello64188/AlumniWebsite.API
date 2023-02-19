@@ -10,6 +10,7 @@ namespace AlumniWebsite.API.Interface
         public IMemberRepository MemberRepository { get; }
         public IPhotoRepository PhotoRepository { get; }
         public ILikeRepository LikeRepository { get; }
+        public IMessageRepository MessageRepository { get; }
         Task<bool> Complete();
         bool HasChanges();
     }

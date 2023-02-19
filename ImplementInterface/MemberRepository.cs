@@ -101,5 +101,13 @@ namespace AlumniWebsite.API.ImplementInterface
         {
             _context.Update(member);
         }
+
+        public async Task<Member> GetUserByPhotoId(int id)
+        {
+            var user = await _context.Users.Include(p => p.Photos)
+                .IgnoreQueryFilters().Where(l => l.Photos.Any(p => p.Id == id))
+                .FirstOrDefaultAsync();
+            return await Task.FromResult(user);
+        }
     }
 }

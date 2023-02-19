@@ -38,6 +38,12 @@ namespace AlumniWebsite.API.Configurations.MapperConfiguration
             CreateMap<PhotoForCreationDto, Photo>();
             CreateMap<Photo, PhotoForReturnDto>();
             CreateMap<UpdateDto, Member>();
+            CreateMap<MessageForCreateDto, Message>().ReverseMap();
+            CreateMap<Message, MessageToReturn>()
+                .ForMember(s => s.SenderPhotoUrl,
+                option => option.MapFrom(m => m.Sender.Photos.FirstOrDefault(i => i.IsMain).Url))
+                .ForMember(s => s.RecipientPhotoUrl, option => option.MapFrom(m => m.Recipient.Photos.FirstOrDefault(i => i.IsMain).Url));
+
 
 
         }

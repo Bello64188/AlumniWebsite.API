@@ -36,7 +36,9 @@ namespace AlumniWebsite.API.Model
         public ICollection<Photo> Photos { get; set; }
         public ICollection<Like> Likers { get; set; }
         public ICollection<Like> Likees { get; set; }
-
+        public ICollection<Message> MessageSent { get; set; }
+        public ICollection<Message> MessageReceived { get; set; }
+        public ICollection<MemberRole> MemberRoles { get; set; }
 
     }
 }

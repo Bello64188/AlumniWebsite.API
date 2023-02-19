@@ -41,6 +41,7 @@ namespace AlumniWebsite.API.Model
             }
             var admin = new Member
             {
+                Email = "admin@gmail.com",
                 UserName = "admin"
             };
             await userManager.CreateAsync(admin, "Pa$$word1");

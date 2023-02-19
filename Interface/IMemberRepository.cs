@@ -14,6 +14,7 @@ namespace AlumniWebsite.API.Interface
         Task<Member> GetMember(string id);
         void Update(Member member);
         Task<Member> Login(string email, string password);
+        Task<Member> GetUserByPhotoId(int id);
 
 
     }
