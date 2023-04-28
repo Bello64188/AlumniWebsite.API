@@ -42,10 +42,11 @@ namespace AlumniWebsite.API.Controllers
             var memberFromUnit = await _unitOfWork.MemberRepository.GetMember(currentId);
             if (memberFromUnit == null) return Unauthorized();
             memberParams.MemberId = currentId;
-            if (string.IsNullOrEmpty(memberParams.Gender))
-            {
-                memberParams.Gender = memberFromUnit.Gender.ToLower() == "female" ? "male" : "female";
-            }
+            memberParams.GraduationYear = memberFromUnit.GraduationYear;
+            //if (!string.IsNullOrEmpty(memberParams.Gender))
+            //{
+            //    memberParams.Gender = memberFromUnit.Gender.ToLower() == "female" ? "male" : "female";
+            //}
             var member = await _unitOfWork.MemberRepository.GetMembers(memberParams);
             var memberMap = _mapper.Map<IList<MemberListDto>>(member);
             Response.AddPagination(member.CurrentPage, member.PageSize, member.TotalPage, member.TotalCount);

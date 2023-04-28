@@ -40,10 +40,12 @@ namespace AlumniWebsite.API
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthManager, AuthManager>();
             services.AddScoped<IPhotoService, PhotoService>();
+            services.AddScoped<IEmailService, EmailService>();
             services.Configure<Cloud>(Configuration.GetSection("Cloud"));
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailConfiguration"));
             services.AddIdetityRolePolicy();
             // services.AddIdentity<Member, MemberRole>().AddEntityFrameworkStores<AppDbContext>();
-            services.AddDbContext<AppDbContext>(option => option.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppDbContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.jwtConfiguration(Configuration);
             services.AddAuthorization();

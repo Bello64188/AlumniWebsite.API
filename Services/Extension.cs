@@ -91,8 +91,9 @@ namespace AlumniWebsite.API.Services
 
         public static void jwtConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            var key = Environment.GetEnvironmentVariable("KEYAPI");
+
             var jwtSetting = configuration.GetSection("Jwt");
+            var key = jwtSetting.GetSection("APIKEY").Value;
             services.AddAuthentication(option =>
             {
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -130,7 +131,7 @@ namespace AlumniWebsite.API.Services
 
         public static IServiceCollection AddIdetityRolePolicy(this IServiceCollection services)
         {
-            var key = Environment.GetEnvironmentVariable("KEYAPI");
+
             services.AddIdentity<Member, MemberRole>(option =>
              {
                  option.Password.RequireNonAlphanumeric = false;

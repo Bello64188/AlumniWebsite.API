@@ -41,7 +41,12 @@ namespace AlumniWebsite.API.ImplementInterface
             /// 2. select  member gender where is equal to params gender 
             /// </summary>
             members = members.Where(m => m.Id != memberParams.MemberId);
-            members = members.Where(g => g.Gender == memberParams.Gender);
+            members = members.Where(g => g.GraduationYear == memberParams.GraduationYear);
+            if (memberParams.Gender != null)
+            {
+                members = members.Where(g => g.Gender == memberParams.Gender && g.GraduationYear == memberParams.GraduationYear);
+            }
+
             // member i liked
             if (memberParams.Likers)
             {

@@ -17,9 +17,9 @@ namespace AlumniWebsite.API.Model
             RoleManager<MemberRole> roleManager)
         {
             if (await userManager.Users.AnyAsync()) return;
-            var memberDate = await System.IO.File.ReadAllTextAsync("Data/MemberSeedData.json");
-            var members = JsonConvert.DeserializeObject<List<Member>>(memberDate);
-            if (members == null) return;
+            //var memberDate = await System.IO.File.ReadAllTextAsync("Data/MemberSeedData.json");
+            //var members = JsonConvert.DeserializeObject<List<Member>>(memberDate);
+            //if (members == null) return;
             var roles = new List<MemberRole>
             {
                 new MemberRole{ Name = "Member"},
@@ -32,13 +32,13 @@ namespace AlumniWebsite.API.Model
                 await roleManager.CreateAsync(role);
             }
 
-            foreach (var member in members)
-            {
-                member.Photos.First().IsApproved = true;
-                member.UserName = member.UserName.ToLower();
-                await userManager.CreateAsync(member, "Pa$$word1");
-                await userManager.AddToRoleAsync(member, "Member");
-            }
+            //foreach (var member in members)
+            //{
+            //    member.Photos.First().IsApproved = true;
+            //    member.UserName = member.UserName.ToLower();
+            //    await userManager.CreateAsync(member, "Pa$$word1");
+            //    await userManager.AddToRoleAsync(member, "Member");
+            //}
             var admin = new Member
             {
                 Email = "admin@gmail.com",

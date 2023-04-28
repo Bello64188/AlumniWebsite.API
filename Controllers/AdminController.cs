@@ -22,13 +22,15 @@ namespace AlumniWebsite.API.Controllers
         private readonly UserManager<Member> userManager;
         private readonly IUnitOfWork unitOfWork;
         private readonly IPhotoService photoService;
+        private readonly RoleManager<MemberRole> roleManager;
 
         public AdminController(UserManager<Member> userManager, IUnitOfWork unitOfWork,
-            IPhotoService photoService)
+            IPhotoService photoService, RoleManager<MemberRole> roleManager)
         {
             this.userManager = userManager;
             this.unitOfWork = unitOfWork;
             this.photoService = photoService;
+            this.roleManager = roleManager;
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "RequireAdminRole", Roles = "Admin")]
@@ -55,6 +57,20 @@ namespace AlumniWebsite.API.Controllers
             var memberRoles = await userManager.GetRolesAsync(member);
             var response = await userManager.AddToRolesAsync(member, chooseRoles.Except(memberRoles));
             if (!response.Succeeded) return BadRequest("Failed to add to roles");
+            //foreach (var item in chooseRoles)
+            //{
+            //    if (item.ToLower() == "admin" || item.ToLower() == "moderator")
+            //    {
+            //        var role = new MemberRole
+            //        {
+            //            Name = item
+            //        };
+            //        await roleManager.CreateAsync(role);
+            //    }
+
+
+            //}
+
             response = await userManager.RemoveFromRolesAsync(member, memberRoles.Except(chooseRoles));
             if (!response.Succeeded) return BadRequest("Failed to remove from roles");
             return Ok(await userManager.GetRolesAsync(member));

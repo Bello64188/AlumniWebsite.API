@@ -38,8 +38,8 @@ namespace AlumniWebsite.API
                     var context = service.GetRequiredService<AppDbContext>();
                     var userManager = service.GetRequiredService<UserManager<Member>>();
                     var roleManager = service.GetRequiredService<RoleManager<MemberRole>>();
-                    await context.Database.MigrateAsync();
-                    await MemberSeed.SeedMembersAsync(userManager, roleManager);
+                    //await context.Database.MigrateAsync();
+                    //await MemberSeed.SeedMembersAsync(userManager, roleManager);
                 }
                 catch (Exception ex)
                 {
