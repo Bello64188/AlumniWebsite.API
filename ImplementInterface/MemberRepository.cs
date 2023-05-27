@@ -44,8 +44,14 @@ namespace AlumniWebsite.API.ImplementInterface
             members = members.Where(g => g.GraduationYear == memberParams.GraduationYear);
             if (memberParams.Gender != null)
             {
-                members = members.Where(g => g.Gender == memberParams.Gender && g.GraduationYear == memberParams.GraduationYear);
+                if (memberParams.Gender.ToLower() == "all")
+                {
+                    members = members.Where(g => g.GraduationYear == memberParams.GraduationYear);
+                }
+                else
+                    members = members.Where(g => g.Gender == memberParams.Gender && g.GraduationYear == memberParams.GraduationYear);
             }
+
 
             // member i liked
             if (memberParams.Likers)

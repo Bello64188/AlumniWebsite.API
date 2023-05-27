@@ -1,4 +1,5 @@
 ﻿using AlumniWebsite.API.Configurations.Filter;
+using AlumniWebsite.API.Data;
 using AlumniWebsite.API.Interface;
 using AlumniWebsite.API.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,30 +24,38 @@ namespace AlumniWebsite.API.Controllers
         private readonly IUnitOfWork unitOfWork;
         private readonly IPhotoService photoService;
         private readonly RoleManager<MemberRole> roleManager;
+        private readonly AppDbContext context;
 
         public AdminController(UserManager<Member> userManager, IUnitOfWork unitOfWork,
-            IPhotoService photoService, RoleManager<MemberRole> roleManager)
+            IPhotoService photoService, RoleManager<MemberRole> roleManager, AppDbContext context)
         {
             this.userManager = userManager;
             this.unitOfWork = unitOfWork;
             this.photoService = photoService;
             this.roleManager = roleManager;
+            this.context = context;
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "RequireAdminRole", Roles = "Admin")]
         [HttpGet("users-with-roles")]
         public async Task<IActionResult> GetMemberWithRole()
         {
-            var members = await userManager.Users
-                  .Include(p => p.MemberRoles)
-                  .OrderBy(m => m.UserName)
-                  .Select(m => new
-                  {
-                      m.Id,
-                      UserName = m.UserName,
-                      Roles = m.MemberRoles.Select(r => r.Name)
-                  }).ToListAsync();
-            return Ok(members);
+            var memberRoles = await (from member in context.Users
+                                     join userRole in context.UserRoles on member.Id equals userRole.UserId
+                                     join role in context.Roles on userRole.RoleId equals role.Id
+                                     select new { member.Id, UserName = member.UserName, Roles = role.Name }).Distinct().ToListAsync();
+
+
+            //var members = await userManager.Users
+            //      .Include(p => p.MemberRoles)
+            //      .OrderBy(m => m.UserName)
+            //      .Select(m => new
+            //      {
+            //          m.Id,
+            //          UserName = m.UserName,
+            //          Roles = m.MemberRoles.Select(r => r.Name)
+            //      }).ToListAsync();
+            return Ok(memberRoles);
         }
         [HttpPost("edit-roles/{userName}")]
         public async Task<IActionResult> EditRoles(string userName, [FromQuery] string roles)
