@@ -44,7 +44,7 @@ namespace AlumniWebsite.API.ImplementInterface
         private JwtSecurityToken GetTokenOption(SigningCredentials signing, List<Claim> claim)
         {
             var jwtSetting = _configuration.GetSection("Jwt");
-            var expiration = DateTime.Now.AddHours(Convert.ToDouble(jwtSetting.GetSection("Lifetime").Value));
+            var expiration = DateTime.Now.AddMinutes(Convert.ToDouble(jwtSetting.GetSection("Lifetime").Value));
             var token = new JwtSecurityToken(
                 issuer: jwtSetting.GetSection("Issuer").Value,
                 claims: claim,
